@@ -1,6 +1,6 @@
-# SER486-Spring26B
+# SER335-Spring26B
 
-This is a repository for my Spring '26 Session B SER486 Class (farming aura)
+This is a repository for my Spring '26 Session B SER335 Class (farming aura)
 
 ## Table of Contents
 
