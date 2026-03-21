@@ -1,0 +1,24 @@
+version: "3" 
+services: 
+        ContainerA: 
+                image: alpine:latest 
+                container_name: ContainerA 
+                tty: true 
+                cap_add:
+                        - ALL
+                privileged: true 
+                network_mode: host
+        ContainerB: 
+                image: alpine:latest 
+                container_name: ContainerB 
+                tty: true 
+                cap_add:
+                        - ALL
+                networks: 
+                        alpine_net: 
+                                ipv4_address: 10.9.9.5
+networks: 
+        alpine_net: 
+                ipam:
+                        config:
+                                - subnet: 10.9.9.0/24
