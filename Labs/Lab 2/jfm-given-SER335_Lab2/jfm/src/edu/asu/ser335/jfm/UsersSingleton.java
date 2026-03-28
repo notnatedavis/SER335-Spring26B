@@ -137,4 +137,59 @@ public final class UsersSingleton {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+ 	 * updates the password for an existing user
+	 * Task H3 : 5.
+ 	 * 
+ 	 * @param userName - user of password to be changed
+ 	 * @param newPassword - the new plain-text password
+ 	 * @throws Exception - if the user does not exist or an I/O error
+ 	 */
+	public static void updatePassword(String userName, String newPassword) throws Exception {
+    	// check if user exists
+    	if (!userPasswordMapping.containsKey(userName) || !userRoleMapping.containsKey(userName)) {
+    	    throw new Exception("user does not exist : " + userName);
+    	}
+
+    	// generate new salted password (update salt in salts.json)
+    	String saltedPassword;
+    	try {
+    	    saltedPassword = SaltsSingleton.getUserSalts().createSaltedPassword(userName, newPassword, false);
+    	} catch (Exception e) {
+    	    throw new Exception("failed to generate new salt : " + e.getMessage(), e);
+    	}
+
+    	// update { authentication.json }
+    	ObjectMapper mapper = new ObjectMapper();
+    	List<User> users;
+    	try (InputStream inputStream = new FileInputStream(new File(CommonConstants.AUTHENTICATION_FILE))) {
+    	    TypeReference<List<User>> typeReference = new TypeReference<List<User>>() {};
+    	    users = mapper.readValue(inputStream, typeReference);
+    	} catch (IOException e) {
+    	    throw new Exception("failed to read authentication.json : " + e.getMessage(), e);
+    	}
+
+    	boolean found = false;
+    	for (User u : users) {
+    	    if (u.getName().equals(userName)) {
+    	        u.setPassword(saltedPassword);
+    	        found = true;
+    	        break;
+    	    }
+    	}
+    	if (!found) {
+    	    throw new Exception("user not found in authentication.json");
+    	}
+
+    	try {
+    	    mapper.writeValue(new File(CommonConstants.AUTHENTICATION_FILE), users);
+    	} catch (IOException e) {
+    	    throw new Exception("failed to write authentication.json : " + e.getMessage(), e);
+    	}
+
+    	// update mapping
+    	userPasswordMapping.put(userName, saltedPassword);
+    	// role unchanged
+	}
 }

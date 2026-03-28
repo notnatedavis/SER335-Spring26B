@@ -155,6 +155,7 @@ public class LoginPannel extends JFrame implements ActionListener {
 	// Login Validation
 	public boolean validateUser(String uName, String pwd, String role) {
 		/* 
+		 * Task H1
 		 * SER335 Lab 2
 		 * Spring '26B
 		 * Nathaniel Davis-Perez

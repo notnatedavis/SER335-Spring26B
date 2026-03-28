@@ -1,5 +1,6 @@
 package org.jfm.main;
 
+import org.jfm.po.ChangePasswordAction; // new import Task H3
 import java.awt.BorderLayout;
 import java.util.Vector;
 import java.util.prefs.Preferences;
@@ -185,6 +186,11 @@ public class MainPanel extends JPanel {
 	LogOutAction logout=new LogOutAction();
 	logoutButton.addActionListener(logout);
 
+	// Task H3 : 1.
+	JButton changePwdButton = new JButton("Change Password");
+	ChangePasswordAction changePwd = new ChangePasswordAction(); // Task 3 : 2. `ChangePasswordAction`
+	changePwdButton.addActionListener(changePwd); // Task 3 : 4. listener
+
 	String[] rpm = RolesSingleton.getRoleMapping().getPrivilegesForRole(userRole); 
 
 	// SER335: You need to figure out under what roles to allow these buttons to be added
@@ -196,14 +202,33 @@ public class MainPanel extends JPanel {
 	    buttons.addElement(f6Button); //Move Button
 	    buttons.addElement(f7Button); //Mkdir Button
 	*/
-	for (int i = 0; rpm != null && i < rpm.length; i++) {
-	    System.out.println("Privileges for " + userRole + " role: " + rpm[i] + i);
+
+	// Task H2 : 1.
+	// priv 'ChangePassword' in authorization.json
+	if (rpm != null) {
+	    for (String priv : rpm) {
+			// button added only if 'ChangePassword' privilege is present
+			if (CommonConstants.CHANGE_PASSWORD_ACTION.equals(priv)) {
+			    buttons.addElement(changePwdButton);
+			} else if (CommonConstants.VIEW_ACTION.equals(priv)) {
+		    buttons.addElement(f3Button);
+			} else if (CommonConstants.EDIT_ACTION.equals(priv)) {
+			    buttons.addElement(f4Button);
+			} else if (CommonConstants.COPY_ACTION.equals(priv)) {
+			    buttons.addElement(f5Button);
+			} else if (CommonConstants.MOVE_ACTION.equals(priv)) {
+			    buttons.addElement(f6Button);
+			} else if (CommonConstants.MKDIR_ACTION.equals(priv)) {
+			    buttons.addElement(f7Button);
+			} else if (CommonConstants.ADDUSER_ACTION.equals(priv)) {
+			    buttons.addElement(addNewUser);
+			}
 			
-	    //Add User
-	    if (rpm[i].equals(CommonConstants.ADDUSER_ACTION)) {
-		buttons.addElement(addNewUser);
+			// Task H2 : 2
+			System.out.println("Privileges for " + userRole + " role: " + priv);
 	    }
-	}		
+	}
+
 	buttons.addElement(f10Button);    //Quit Button, for everyone
 	buttons.addElement(logoutButton); //Logout Button, for everyone
 	

@@ -1,7 +1,14 @@
-/**
- * 
+/* 
+ * jfm/src/org/jfm/main/ChangePasswordPannel.java
+ * Task H3 : 4.
+ * SER335 Lab 2
+ * Spring '26B
+ * Nathaniel Davis-Perez
  */
+
 package org.jfm.po;
+
+// ----- Imports -----
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -19,102 +26,161 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-
 import edu.asu.ser335.jfm.RolesSingleton;
+import edu.asu.ser335.jfm.UsersSingleton;
 
+// ----- Main -----
 
-/**
- * @author Nikhil Hiremath
- *
- */
 public class ChangePasswordPannel extends JFrame implements ActionListener {
-	private static final long serialVersionUID = 1L;
-	private JLabel labelUsername = new JLabel("Enter username: ");
-	private JLabel labelPassword = new JLabel("Enter password: ");
-	private JLabel labelRole = new JLabel("Enter Role: ");
-	private JLabel message;
-	private JTextField textUsername = new JTextField(20);
-	private JPasswordField fieldPassword = new JPasswordField(20);
-	private JButton buttonChangePassword = new JButton("Submit");
-	private JPanel newPanel;
-	private JComboBox<String> roleList;
 
-	public ChangePasswordPannel() {
-		// create a new panel with GridBagLayout manager
-		newPanel = new JPanel(new GridBagLayout());
+    // constants
+    private static final long serialVersionUID = 1L;
+    private JLabel labelUsername = new JLabel("Username: ");
+    private JLabel labelPassword = new JLabel("New Password: ");
+    private JLabel labelRole = new JLabel("Role: ");
+    private JTextField textUsername = new JTextField(20);
+    private JPasswordField fieldPassword = new JPasswordField(20);
+    private JButton buttonSubmit = new JButton("Submit");
+    private JPanel newPanel;
+    private JComboBox<String> roleList;
 
-		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.anchor = GridBagConstraints.WEST;
-		constraints.insets = new Insets(10, 10, 10, 10);
+    public ChangePasswordPannel() {
+        newPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.WEST;
+        constraints.insets = new Insets(10, 10, 10, 10);
 
-		// add components to the panel
-		// UserName
-		constraints.gridx = 0;
-		constraints.gridy = 0;
-		newPanel.add(labelUsername, constraints);
+        // username
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        newPanel.add(labelUsername, constraints);
 
-		constraints.gridx = 1;
-		newPanel.add(textUsername, constraints);
+        constraints.gridx = 1;
+        newPanel.add(textUsername, constraints);
 
-		constraints.gridx = 0;
-		constraints.gridy = 1;
+        // password
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        newPanel.add(labelPassword, constraints);
 
-		// Password
-		newPanel.add(labelPassword, constraints);
+        constraints.gridx = 1;
+        newPanel.add(fieldPassword, constraints);
 
-		constraints.gridx = 1;
-		newPanel.add(fieldPassword, constraints);
+        // role (filled from user)
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        newPanel.add(labelRole, constraints);
 
-		constraints.gridx = 0;
-		constraints.gridy = 2;
+        constraints.gridx = 1;
+        roleList = new JComboBox<String>(RolesSingleton.getRoleMapping().getDisplayRoles());
+        roleList.setEnabled(false); // readonly – set on username entry
 
-		// Role
-		newPanel.add(labelRole, constraints);
-		constraints.gridx = 1;
+        newPanel.add(roleList, constraints);
 
-		// drop down
-		roleList = new JComboBox<String>(RolesSingleton.getRoleMapping().getDisplayRoles());
+        // submit button
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        constraints.gridwidth = 2;
+        constraints.anchor = GridBagConstraints.CENTER;
+        newPanel.add(buttonSubmit, constraints);
 
-		// add to the parent container (e.g. a JFrame):
-		newPanel.add(roleList, constraints);
+        buttonSubmit.addActionListener(this);
 
-		// System.out.println("Selected role: " + role);
+        // auto-fill role if username field lost
+        textUsername.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateRoleFromUsername();
+            }
+        });
 
-		constraints.gridx = 0;
-		constraints.gridy = 3;
+        newPanel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(), "Change Password"));
+        add(newPanel);
 
-		message = new JLabel();
-		newPanel.add(message, constraints);
-		constraints.gridx = 1;
+        pack();
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    }
 
-		constraints.gridwidth = 3;
-		constraints.anchor = GridBagConstraints.CENTER;
-		newPanel.add(buttonChangePassword, constraints);
+    /**
+     * Updates the role combo box based on the entered username.
+     * If user exists, selects the current role; otherwise disables the combo box.
+     */
+    private void updateRoleFromUsername() {
+        String userName = textUsername.getText().trim();
+        if (userName.isEmpty()) {
+            roleList.setEnabled(false);
+            roleList.setSelectedIndex(-1);
+            return;
+        }
+        try {
+            String role = UsersSingleton.getUserRoleMapping().get(userName);
+            if (role != null) {
+                roleList.setSelectedItem(role);
+                roleList.setEnabled(false); // Read-only – role cannot be changed here
+            } else {
+                roleList.setEnabled(false);
+                roleList.setSelectedIndex(-1);
+            }
+        } catch (Exception e) {
+            roleList.setEnabled(false);
+            roleList.setSelectedIndex(-1);
+        }
+    }
 
-		// Adding the listeners to components..
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String userName = textUsername.getText().trim();
+        String newPassword = new String(fieldPassword.getPassword());
+        String selectedRole = (String) roleList.getSelectedItem();
 
-		buttonChangePassword.addActionListener(this);
+        // 1. Validate fields
+        if (userName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "username cannot be empty",
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (newPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "password cannot be empty",
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (selectedRole == null) {
+            JOptionPane.showMessageDialog(this, "please select a role",
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-		// set border for the panel
-		newPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Admin Panel"));
+        try {
+            // 2. check user exists & role matches
+            String currentRole = UsersSingleton.getUserRoleMapping().get(userName);
 
-		// add the panel to this frame
-		add(newPanel);
+            if (currentRole == null) {
+                JOptionPane.showMessageDialog(this, "user does not exist: " + userName,
+                        "validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (!currentRole.equals(selectedRole)) {
+                JOptionPane.showMessageDialog(this,
+                        "role does not match the user's current role\n" +
+                        "current role for " + userName + " is: " + currentRole,
+                        "validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-		pack();
-		setLocationRelativeTo(null);
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		String userName = textUsername.getText();
-		// String userName = (String) roleList.getSelectedItem();
-		String password = String.valueOf(fieldPassword.getPassword());
-		String role = (String) roleList.getSelectedItem();
-		
-		// TODO: for you to complete!
-		JOptionPane.showMessageDialog(null, "NOT IMPLEMENTED YET!!");
+            // 3. update password
+            UsersSingleton.updatePassword(userName, newPassword);
+            JOptionPane.showMessageDialog(this,
+                    "password successfully changed for user : " + userName,
+                    "success", JOptionPane.INFORMATION_MESSAGE);
+            dispose(); // close the dialog
 
-	}
-
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this,
+                    "failed to change password : " + ex.getMessage(),
+                    "error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }
 }

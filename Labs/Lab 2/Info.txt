@@ -1,0 +1,16 @@
+Submit : 
+
+Compile : 
+
+    > install prerequisites
+        > sudo apt update
+        > sudo apt install openjdk-17-jdk
+        > sudo apt install ant
+    > cd into Lab 2/jfm-given/jfm
+    > ant
+    > cd jfm-0.9.1
+    > java -cp jfm.jar org.jfm.main.Main
+
+Reuse : 
+
+    > 
