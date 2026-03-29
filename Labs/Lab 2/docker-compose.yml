@@ -17,6 +17,7 @@ services:
     tty: true
     cap_add:
       - ALL
+    network_mode: host
     command: sleep infinity
 
     # no networks lets container use default bridge

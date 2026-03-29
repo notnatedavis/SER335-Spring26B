@@ -7,4 +7,4 @@ filterCriteria= sys.argv[1]
 
 def print_pkt(pkt) :
 	pkt.show()
-pkt = sniff(iface=sys.argv[2] if len(sys.argv) > 2 else None, filter=filterCriteria, prn=print_pkt)
+pkt = sniff(iface='enp2s0', filter= filterCriteria, prn=print_pkt)
