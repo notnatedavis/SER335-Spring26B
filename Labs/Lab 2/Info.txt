@@ -2,6 +2,8 @@ Submit :
 
 Compile : 
 
+Part 1, 
+
     > install prerequisites
         > sudo apt update
         > sudo apt install openjdk-17-jdk
@@ -11,6 +13,42 @@ Compile :
     > cd jfm-0.9.1
     > java -cp jfm.jar org.jfm.main.Main
 
-Reuse : 
+Part 2,
 
-    > 
+    prerequisites
+
+    > iptables --version
+else    > sudo update-alternatives --set iptables /usr/sbin/iptables-legacy
+else    > sudo update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+    > sudo nft flush ruleset
+    > sudo systemctl stop docker
+    removes stale pid
+    > sudo rm -f /var/run/docker.pid
+    remove all leftover containers & networks
+    > docker container prune -f
+    > docker network prune -f
+    delete existing bridge if exists
+    > sudo ip link delete docker0 2>/dev/null
+    edit daemon.json for docker
+    this prevents crashing issue of
+    * Network lab2_default  Error
+    * failed to create network lab2_default: 
+    * Error response from daemon: Failed to Setup IP 
+    * tables: Unable to enable SKIP DNAT rule:  (iptables 
+    * failed: iptables --wait -t nat -I DOCKER -i br-646236b6e114 
+    * -j RETURN: iptables: No chain/target/match by that name
+    > sudo nano /etc/docker/daemon.json
+    add
+    """
+    {
+        "iptables": true,
+        "exec-opts": ["native.cgroupdriver=systemd"]
+    }
+    """
+    to daemon.json , save and exit
+    test start docker (wait 10 sec) then stop
+    > sudo systemctl start docker
+    > sudo journalctl -u docker -f
+        *wait*
+    > ip link show docker0 
+    should show something like "brd ff:ff:ff:ff:ff:ff"
