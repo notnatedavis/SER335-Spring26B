@@ -135,7 +135,7 @@ public class ChangePasswordPannel extends JFrame implements ActionListener {
         String newPassword = new String(fieldPassword.getPassword());
         String selectedRole = (String) roleList.getSelectedItem();
 
-        // 1. Validate fields
+        // 1. validate fields
         if (userName.isEmpty()) {
             JOptionPane.showMessageDialog(this, "username cannot be empty",
                     "Input Error", JOptionPane.ERROR_MESSAGE);

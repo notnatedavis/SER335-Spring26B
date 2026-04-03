@@ -15,7 +15,7 @@ def spoof_pkt(pkt) :
     # sends spoofed ICMP echo reply to original sender
 
     # only process ICMP echo request packets
-    if ICMP in pkt and pkt[ICMP].type == 8 :  # type 8 = echo request
+    if ICMP in pkt and pkt[ICMP].type == 8 : # type 8 = echo request
         # extract source & destination IPs from the request
         original_src = pkt[IP].src
         original_dst = pkt[IP].dst
