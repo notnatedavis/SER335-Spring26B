@@ -1,0 +1,25 @@
+Submission : 
+
+    > SER335B_Lab3_ndavispe.zip
+        > activity1
+        > activity2
+
+Rubric : 
+
+    > Activity 1
+        > 4 misuse cases to given model (3 reg use, 1 w/ 2 misuse)
+        > for each case , complete template for each
+        > update asta template with 4 cases
+
+    > Activity 2
+        > Part 1 (Q/A)
+            - Which combination of Root Cause / Threat is the riskiest and why? Which Root Cause by itself 
+              induces the most risk and why? Which threat induces the most risk and why?
+
+        > Part 2 (Q/A)
+            - Consider if a particular proactive mitigation action is worth doing across the entire project
+            - Compute whteher a contingency plan is worthwile for that Root Cause (across the entire project)
+
+        > Part 3 (Q/A)
+            - Create a mitigation and contingency planning strategy. What are the final set of combined mitigation
+              and contingency actions you recommend putting place for your organization? 
