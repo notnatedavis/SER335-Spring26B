@@ -1,0 +1,15 @@
+Submission : 
+
+    > lab4_activity1.docx
+        > commands + ss
+    > activity2.zip
+        > 3 revised code snippets + explanation of changes made + direct references to SEI CERT coding guidelines
+    > lab4_activity3.docx &/ .zip
+        > ss + explanations + code + modified source tree + other files
+
+    > SER335_Lab4(ndavispe).zip
+        > all combined
+        
+Rubric : 
+
+    > 

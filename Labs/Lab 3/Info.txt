@@ -8,8 +8,9 @@ Rubric :
 
     > Activity 1
         > 4 misuse cases to given model (3 reg use, 1 w/ 2 misuse)
-        > for each case , complete template for each
-        > update asta template with 4 cases
+        https://capec.mitre.org/cgi-bin/viewgen.cgi?id=3000&qs=_0_0_3_0
+            > for each case , complete template for each
+            > update asta template with 4 cases
 
     > Activity 2
         > Part 1 (Q/A)
