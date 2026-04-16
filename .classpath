@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="Labs/Lab 2/jfm-given-SER335_Lab2/jfm/src"/>
+	<classpathentry excluding="jfm/src/" kind="src" path="Labs/Lab 4"/>
+	<classpathentry kind="src" path="Labs/Lab 4/jfm/src"/>
+	<classpathentry kind="lib" path="Labs/Lab 2/jfm-given-SER335_Lab2/jfm/jfm-0.9.1/jfm.jar"/>
+	<classpathentry kind="lib" path="Labs/Lab 2/jfm-given-SER335_Lab2/jfm/libs/com.fasterxml.jackson.core.jar"/>
+	<classpathentry kind="lib" path="Labs/Lab 2/jfm-given-SER335_Lab2/jfm/libs/com.fasterxml.jackson.databind.jar"/>
+	<classpathentry kind="lib" path="Labs/Lab 2/jfm-given-SER335_Lab2/jfm/libs/jackson-annotations-2.1.2.jar"/>
+	<classpathentry kind="lib" path="Labs/Lab 2/jfm-given-SER335_Lab2/jfm/libs/siphash-2.0.0.jar"/>
+	<classpathentry kind="lib" path="Labs/Lab 2/jfm-given-SER335_Lab2/jfm/plugins/commons-net-1.4.1.jar"/>
+	<classpathentry kind="lib" path="Labs/Lab 2/jfm-given-SER335_Lab2/jfm/plugins/jakarta-oro-2.0.8.jar"/>
+	<classpathentry kind="lib" path="Labs/Lab 2/jfm-given-SER335_Lab2/jfm/plugins/jfmftpfs.jar"/>
+	<classpathentry kind="output" path="Labs/Lab 2/jfm-given-SER335_Lab2/jfm/classes"/>
+</classpath>

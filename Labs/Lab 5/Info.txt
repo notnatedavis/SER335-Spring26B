@@ -1,0 +1,19 @@
+Notes : 
+
+    > watch setup + 3 vids
+
+Submission : 
+
+    > 
+        > commands + ss
+
+    > SER335_LabX(ndavispe).zip
+        > all combined
+        
+Rubric : 
+
+    > 
+
+Compilation & Testing : 
+
+    > 
