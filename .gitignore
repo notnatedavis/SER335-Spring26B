@@ -29,5 +29,7 @@ venv.bak/
 
 .idea/
 .vscode/
-
+.DS_Store
+# .classpath # needed for eclipse ?
 /.metadata/
+
