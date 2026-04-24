@@ -117,105 +117,94 @@ public class CopyAction implements Action {
     return totalSizes;
   }
 
+  // SER335 LAB5: defensive programming – null check for listFiles()
   private void copyDir(JFMFile dir,JFMFile dest) throws ActionCancelledException{
     JFMFile[] f=dir.listFiles();
-    if(f==null) return;
-    //File destFile=new File(toDir.getPath()+(toDir.getPath().endsWith(File.separator)?"":File.separator)+el.getName());
+    if(f == null) return;   // defensive: no files to copy
     for(int i=0;i<f.length;i++){    	      
       if(f[i].isDirectory()){
         JFMFile destFile=dest.mkdir(f[i].getName());
         copyDir(f[i],destFile);
       }else{
-    	JFMFile destFile=dest.createFile(f[i].getName());
+        JFMFile destFile=dest.createFile(f[i].getName());
         copyFile(f[i],destFile);
       }
     }
   }
 
+  // SER335 LAB5 : defensive programming – check streams for null
   private void copyFile(JFMFile fin,JFMFile fout) throws ActionCancelledException {
     if(fout.exists() && !overwriteAll && !skipAll){
-
       java.text.SimpleDateFormat format=new java.text.SimpleDateFormat("EEE, MMM d, yyyy 'at' hh:mm:ss");
-
-      String message="Target file "+fout.getPath()+"  already exists."+System.getProperty("line.separator")+System.getProperty("line.separator")+
-                     "Source last modified date: "+format.format(new java.util.Date(fin.lastModified()))+System.getProperty("line.separator")+
-                     "Target last modified date: "+format.format(new java.util.Date(fout.lastModified()))+System.getProperty("line.separator")+System.getProperty("line.separator")+
-                     "What should I do?";
+      String message="Target file "+fout.getPath()+"  already exists."+System.getProperty("line.separator")+System.getProperty("line.separator") + "Source last modified date: "+format.format(new java.util.Date(fin.lastModified()))+System.getProperty("line.separator")+ "Target last modified date: "+format.format(new java.util.Date(fout.lastModified()))+System.getProperty("line.separator")+System.getProperty("line.separator") + "What should I do?";
       String[] buttons=new String[]{"Overwrite","Overwrite all","Skip","Skip all","Cancel"};
 
       int result=JOptionPane.showOptionDialog(progress,message,"File exists",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE,null,buttons,buttons[2]);
 
-      switch (result){
-        case 0:
-          break;
-        case 1:
-          overwriteAll=true;
-          break;
-        case 2:
+      switch (result) {
+        case 0 : break;
+        case 1 : overwriteAll=true; break;
+        case 2 :
           totalBytesWritten+=fin.length();          
           int t_percent=totalFilesSizes!=0?(int)((totalBytesWritten*100)/totalFilesSizes):0;
           progress.setTotalProgresssValue(t_percent);
           return;
-        case 3:
-          skipAll=true;
-          break;
-          case 4:
-            throw new ActionCancelledException();
+        case 3 : skipAll=true; break;
+        case 4 : throw new ActionCancelledException();
       }
     }
 
-    if(fout.exists() && skipAll){
-          totalBytesWritten+=fin.length();
-          int t_percent=(int)((totalBytesWritten*100)/totalFilesSizes);
-          progress.setTotalProgresssValue(t_percent);
-          progress.setFileProgresssValue(100);
-          return;
+    if(fout.exists() && skipAll) {
+      totalBytesWritten+=fin.length();
+      int t_percent=(int)((totalBytesWritten*100)/totalFilesSizes);
+      progress.setTotalProgresssValue(t_percent);
+      progress.setFileProgresssValue(100);
+      return;
     }
-      java.io.InputStream in=null;
-      java.io.OutputStream out=null;
-      try{
-        in=fin.getInputStream();
-        //WAS new FileOutputStream(fout.getPath(),append);
-        out=fout.getOutputStream();
-        progress.setFileProgresssValue(0);
-        curentlyCopiedFile=fout;
-        byte[] data=new byte[1024];
-        int read=0;
-        long bytesWrote=0;
-        long f_length=fin.length();
 
-        /**@todo Maybe async IO would be nice here**/
-        while((read=in.read(data))>=0){
-          if(cancel){
-            throw new ActionCancelledException();
-          }
-
-          out.write(data,0,read);
-          bytesWrote+=read;
-          totalBytesWritten+=read;
-          int f_percent=(int)((bytesWrote*100)/f_length);
-          int t_percent=(int)((totalBytesWritten*100)/totalFilesSizes);
-          progress.setFileProgresssValue(f_percent);
-          progress.setTotalProgresssValue(t_percent);
-        }
-        progress.setFileProgresssValue(100);
-      }catch(ActionCancelledException ex){
-    	  ex.printStackTrace();
-          curentlyCopiedFile.delete();
-          throw ex;
-      }catch(Exception ex){
-        JOptionPane.showMessageDialog(progress,"Error while writing "+fout.getPath(),"Error",JOptionPane.ERROR_MESSAGE);
-        curentlyCopiedFile.delete();
-      }finally{
-        try {
-          in.close();          
-        }
-        catch (Exception ignored) {}
-        try {
-            out.close();
-        }
-        catch (Exception ignored) {}
+    java.io.InputStream in = null;
+    java.io.OutputStream out = null;
+    try {
+      in = fin.getInputStream();
+      if (in == null) {
+        JOptionPane.showMessageDialog(progress, "Cannot read source file: " + fin.getPath(), "Error", JOptionPane.ERROR_MESSAGE);
+        return;
       }
+      out = fout.getOutputStream();
+      if (out == null) {
+        JOptionPane.showMessageDialog(progress, "Cannot write to destination file: " + fout.getPath(), "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+      }
+      progress.setFileProgresssValue(0);
+      curentlyCopiedFile = fout;
+      byte[] data = new byte[1024];
+      int read = 0;
+      long bytesWrote = 0;
+      long f_length = fin.length();
+
+      while((read=in.read(data))>=0) {
+        if (cancel){
+          throw new ActionCancelledException();
+        }
+        out.write(data,0,read);
+        bytesWrote+=read;
+        totalBytesWritten+=read;
+        int f_percent=(int)((bytesWrote*100)/f_length);
+        int t_percent=(int)((totalBytesWritten*100)/totalFilesSizes);
+        progress.setFileProgresssValue(f_percent);
+        progress.setTotalProgresssValue(t_percent);
+      }
+      progress.setFileProgresssValue(100);
+    } catch(ActionCancelledException ex){
+      if (curentlyCopiedFile != null) curentlyCopiedFile.delete();
+      throw ex;
+    } catch(Exception ex){
+      JOptionPane.showMessageDialog(progress,"Error while writing "+fout.getPath(),"Error",JOptionPane.ERROR_MESSAGE);
+      if (curentlyCopiedFile != null) curentlyCopiedFile.delete();
+    } finally{
+      try { if(in != null) in.close(); } catch(Exception ignored) {}
+      try { if(out != null) out.close(); } catch(Exception ignored) {}
+    }
   }
 
   private void copyFiles(JFMFile[] filesToBeCopied,JFMFile destinationDir) throws ActionCancelledException{

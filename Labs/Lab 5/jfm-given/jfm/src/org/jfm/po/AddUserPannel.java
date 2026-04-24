@@ -114,16 +114,46 @@ public class AddUserPannel extends JFrame implements ActionListener {
 		String password = String.valueOf(fieldPassword.getPassword());
 		String role = (String) roleList.getSelectedItem();
 
+		// SER335 LAB5 : defensive input validation
+		if (userName.isEmpty() || password.isEmpty()) {
+			JOptionPane.showMessageDialog(this,
+				"Username and password cannot be empty.",
+				"Input Error",
+				JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
 		try {
 			if (!UsersSingleton.createPasswordMapping(userName, password, role)) {
-				JOptionPane.showMessageDialog(null, "User already exists or fields incomplete!!");
-			}
-			else {
-				JOptionPane.showMessageDialog(null, "User created successfully!!");
+				JOptionPane.showMessageDialog(this,
+					"User already exists or fields incomplete!",
+					"Creation Failed",
+					JOptionPane.WARNING_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(this,
+					"User created successfully!",
+					"Success",
+					JOptionPane.INFORMATION_MESSAGE);
 				dispose();
 			}
-		} catch (Throwable t) {
-			JOptionPane.showMessageDialog(null, "Some error accessing file!!");	
+		} catch (Exception ex) {
+			// SER335 LAB5 : specific error messages, no more stack trace
+			String errorMsg = ex.getMessage();
+			if (errorMsg.contains("salt")) {
+				JOptionPane.showMessageDialog(this,
+					"Cannot write salts.json. Check file permissions.",
+					"File System Error",
+					JOptionPane.ERROR_MESSAGE);
+			} else if (errorMsg.contains("authentication")) {
+				JOptionPane.showMessageDialog(this,
+					"Cannot write authentication.json. Check file permissions.",
+					"File System Error",
+					JOptionPane.ERROR_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(this,
+					"Error creating user: " + errorMsg,
+					"Unexpected Error",
+					JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
-}

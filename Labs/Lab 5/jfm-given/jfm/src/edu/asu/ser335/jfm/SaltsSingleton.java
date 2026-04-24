@@ -85,22 +85,22 @@ public final class SaltsSingleton {
 		return rval;
 	}
 
+	// SER335 LAB5 : replaced generic catch with specific IOException + removed stack trace
 	public final String createSaltedPassword(String userName, String password, boolean addFlag) throws Exception {
 		byte[] salt = generateSalt();
 		String slt = new String(salt);
 
 		try {
 			if (writeSaltsFile(userName, slt, addFlag)) {
-				userSaltsMapping.put(userName, slt);  // only update the mapping if we wrote it to the file
+				userSaltsMapping.put(userName, slt);
 				return Long.toString(SipHasher.hash(salt, password.getBytes()));
 			} else {
-				throw new Exception("Unable to create salt");
+				throw new Exception("Unable to create salt: write operation returned false");
 			}
 		} catch (IOException ie) {
-			ie.printStackTrace();
-			throw new Exception("Unable to persist salt");
+			// no more printStackTrace – throw friendly exception
+			throw new Exception("Failed to write salt file. Please check file permissions for resources/salts.json");
 		}
-
 	}
 	
 	// load salts.json and create userSaltMapping.

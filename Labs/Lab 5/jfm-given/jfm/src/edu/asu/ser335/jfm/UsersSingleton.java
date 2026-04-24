@@ -56,8 +56,8 @@ public final class UsersSingleton {
 		return Collections.unmodifiableMap(userPasswordMapping);
 	}
 
+	// SER335 LAB5 : no more printStackTrace – just throws IOException
 	private static final void writeAuthFile(User u) throws IOException {
-		// adding the new user to authentication.json
 		ObjectMapper mapper = new ObjectMapper();
 		List<User> users;
 		InputStream inputStream = new FileInputStream(new File(CommonConstants.AUTHENTICATION_FILE));
@@ -67,26 +67,22 @@ public final class UsersSingleton {
 		mapper.writeValue(new File(CommonConstants.AUTHENTICATION_FILE), users);
 	}
 
+	// SER335 LAB5 : no more printStackTrace - rethrows with clear message
 	public static final boolean createPasswordMapping(String userName, String password, String role) throws Exception {
-		boolean rval = true; // we assume user does not exist
+		boolean rval = true;
 
-		// Check if user already exists.
 		if (!userName.isEmpty() && !password.isEmpty() && !role.isEmpty()) {
 			if (UsersSingleton.userRoleMapping.containsKey(userName)
 					&& UsersSingleton.userRoleMapping.get(userName).equals(role)) {
 				rval = false;
 			} else {
-				// If user does not exist, create a new salted password and add the user details
-				// in userPasswordMapping, userRoleMapping, userSaltMapping
-				// and all write details in authentication.json and salt.json
 				String saltedPassword = null;
 				try {
 					saltedPassword = SaltsSingleton.getUserSalts().createSaltedPassword(userName, password, true);
 				} catch (Exception exc) {
-					// if we got an exception on this call then the salt was not saved, so we should abort by rethrowing exc
-					throw new Exception(exc);
+					// no stack trace – rethrow with explanation
+					throw new Exception("Failed to create salted password: " + exc.getMessage());
 				}
-				// now we can go ahead with our work
 				User u = new User();
 				u.setName(userName);
 				u.setPassword(saltedPassword);
@@ -94,10 +90,8 @@ public final class UsersSingleton {
 
 				try {
 					writeAuthFile(u);
-				} catch (Exception exc2) {
-					// one problem we have is that we are not transactional; if we fail writing the auth file but succeeded
-					// with the salts file above we will be out of sync
-					throw new Exception("Unable to write auth file, salts file may be corrupted");
+				} catch (IOException exc2) {
+					throw new Exception("Unable to write authentication file. Salts file may be inconsistent.");
 				}
 				UsersSingleton.userPasswordMapping.put(userName, saltedPassword);
 				UsersSingleton.userRoleMapping.put(userName, role);

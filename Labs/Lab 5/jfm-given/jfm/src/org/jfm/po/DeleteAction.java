@@ -72,16 +72,18 @@ public class DeleteAction implements Action {
       Broadcaster.notifyChangeDirectoryListeners(ev);
   }
 
+  // SER335 LAB5 : defensive programming – null check for listFiles()
   private void deleteFile(JFMFile fi){
     if(fi.isDirectory()){
-      JFMFile[] list=fi.listFiles();
-      for(int i=0;i<list.length;i++){
-        deleteFile(list[i]);
+      JFMFile[] list = fi.listFiles();
+      if (list != null) { // defensive check
+        for(int i=0;i<list.length;i++){
+          deleteFile(list[i]);
+        }
       }
       fi.delete();
     }else{
       fi.delete();
     }
   }
-
 }
