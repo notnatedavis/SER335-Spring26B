@@ -1,0 +1,45 @@
+Activity 2 : Ethics and Privacy
+
+    Task 1.
+        1. 
+            a. Alice's act of accessing and scanning another student's personal
+               academic record without their consent is illegal under the Computer
+               Fraud and Abuse Act.
+            b. Alice's act of penetration testing wasn't unethical given the 
+               circumstances but had a bad actor been aware of the expliot then
+               they potentially could have caused alot of harm.
+        2. 
+            a. Alice's act of accessing Charlie's information within the institution's 
+               property (devices & network) wasn't illegal but Alice's overwillingness 
+               to provide Charlie's personal device history unconsentually falls into a 
+               legal gray zone. On one arguement there is that since the request was made 
+               by the Police they have the right to obtain private personal information, 
+               however if so a warrent or proper documentation would need to be provided 
+               as individuals have rights.
+            b. Alice's act of accessing Charlie's information within the institution's 
+               property (devices & network) wasn't unethical but Alice's access to Charlie's 
+               personal device history and traffic could be argued as unethical. With
+               the arguement being made Alice has no write to personal private data but on
+               the opposite end that you fork up that right the second you join the network.
+            c. In this specific scenario (assuming no warrent or documentation was provided 
+               and Alice overwillingly provided Charlie's personal device history & data)
+               Charlie's rights were violated. His rights would not have been violated had the
+               Police provided a warrent, they would have gotten his data either way, but
+               specifically Alice violated Charlie's rights.
+    
+    Task 2.
+        1. Arizona's statute specifically penalizes reckless and knowing behavior. This allows
+           Arizona to prosecute offenders who acted without care and deliberation. In California
+           the opposite is true that the act had to have been done "knowingly and without permission"
+           allowing for more leniency requiring proof of actual knowledge.
+        2. California's statute contains a crime 'knowingly and without permission using another’s 
+           internet domain name or profile to send damaging emails or posts' that is absent from
+           Arizona. This directly targets email spoofing and social media profile impersonation attacks.
+        3. Overall Arizona's law is stricter due to its criminalization of reckless conduct and imposes
+           higher penalties on these offenses (up to 10 years in jail vs 1-2 years in California).
+        4. Taking into account (Punishment for crime severity, Addressing existing threats, Helpful actors, 
+           and willingness of offenders to attack again) as criteria I believe California's law is better. Given that
+           modern day hacking is largely involved in phishing, fooling, and deception the focus on
+           emails and social media allows California to directly prosecute and address the core issue.
+           Additionally Arizona dishes out harsher penalities but for simpler infractions California
+           properly tailors the punishment to the severity of the conduct.
